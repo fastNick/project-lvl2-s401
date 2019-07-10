@@ -1,3 +1,3 @@
-export default (firstConfig, secondConfig, config) => {  
-  console.log(`Calculate difference between firstConfig and secondCongig`)  
-}
+export default () => {
+  console.log('Calculate difference between firstConfig and secondCongig');
+};

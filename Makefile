@@ -8,4 +8,4 @@ publish:
 	npm publish
 
 lint:
-	npx eslint --debug --fix .
+	npx eslint --debug .
