@@ -1,0 +1,34 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/src/bin/gendiff.js",
+            "args": [
+                "--inspect-brk",
+                "./{,!(node_modules)/**/}*.test.js",
+                "--require", "babel-core/register",                
+                "--timeout", "999999",
+                "--colors"
+            ],
+            "port": 9229,
+            "internalConsoleOptions": "openOnSessionStart",
+            "sourceMaps": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug",
+            "program": "sayHi -h",
+            "sourceMaps": true,
+            "args": [
+                "-h"
+            ]
+        },
+    ]
+}

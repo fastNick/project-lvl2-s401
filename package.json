@@ -1,0 +1,42 @@
+{
+  "name": "difference-calculator",
+  "version": "1.0.0",
+  "description": "Learn how to create cli applications, parse and format data in json, yaml, ini. Learn to design an application architecture. And also write unit tests.",
+  "main": "index.js",
+  "bin": {
+    "gendiff": "./dist/bin/gendiff.js"
+  },
+  "scripts": {
+    "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fastNick/project-lvl2-s401.git"
+  },
+  "keywords": [
+    "cli",
+    "application",
+    "parse",
+    "format",
+    "json",
+    "yaml",
+    "ini",
+    "data"
+  ],
+  "author": "Nick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fastNick/project-lvl2-s401/issues"
+  },
+  "homepage": "https://github.com/fastNick/project-lvl2-s401#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.0",
+    "@babel/core": "^7.5.0",
+    "@babel/node": "^7.5.0",
+    "@babel/preset-env": "^7.5.2"
+  },
+  "dependencies": {
+    "commander": "^2.20.0"
+  }
+}
