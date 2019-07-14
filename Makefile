@@ -18,3 +18,6 @@ test:
 
 make build:
 	npm run build
+
+make coveralls:
+	npm run coveralls

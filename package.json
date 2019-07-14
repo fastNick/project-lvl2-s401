@@ -9,7 +9,8 @@
   "scripts": {
     "build": "NODE_ENV=production babel src --out-dir dist --source-maps inline",
     "prepublishOnly": "npm run build",
-    "test": "jest"
+    "test": "jest",
+    "coveralls": "node_modules/.bin/jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "@babel/node": "^7.5.0",
     "@babel/preset-env": "^7.5.2",
     "babel-eslint": "^10.0.1",
+    "coveralls": "^3.0.5",
     "eslint": "^5.11.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-babel": "^5.3.0",
