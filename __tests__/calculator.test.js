@@ -1,7 +1,7 @@
 import { join as buildPath } from 'path';
 import gendiff from 'gendiff';
-import { getDataFromFile, areDiffsEqual } from '../src/lib/helper';
 
+import { getDataFromFile, areDiffsEqual } from '../src/lib/helper';
 
 beforeAll(() => console.log('Calculation of files\' difference: '));
 
