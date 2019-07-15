@@ -5,4 +5,6 @@
 
 [![asciicast](https://asciinema.org/a/xZhKPaGdzhRWWuZZTAeTgffN1.svg)](https://asciinema.org/a/xZhKPaGdzhRWWuZZTAeTgffN1)
 
+[![asciicast](https://asciinema.org/a/J8uX8DAbcv0HQcaDYl2TcjCga.svg)](https://asciinema.org/a/J8uX8DAbcv0HQcaDYl2TcjCga)
+
 [![Build Status](https://travis-ci.org/fastNick/project-lvl2-s401.svg?branch=master)](https://travis-ci.org/fastNick/project-lvl2-s401)

@@ -1,8 +1,9 @@
 import { has } from 'lodash';
 import { readFileSync } from 'fs';
 import { join as buildPath, isAbsolute as isPathAbsolute, resolve } from 'path';
+import getParser from './parsers';
 
-const testDirPath = buildPath(__dirname, '../../', 'json_files');
+const testDirPath = buildPath(__dirname, '../../', 'comparison_files');
 
 export const getDataFromFile = (filePath) => {
   try {
@@ -40,8 +41,8 @@ const calculateDifferenceForOneFile = (beforeJson, afterJson, beforeSymbol, afte
   }), {});
 
 export const calculateDifferenceForTwoFiles = (beforeFile, afterFile) => {
-  const beforeJson = JSON.parse(getDataFromFile(beforeFile));
-  const afterJson = JSON.parse(getDataFromFile(afterFile));
+  const beforeJson = getParser(beforeFile)(getDataFromFile(beforeFile));
+  const afterJson = getParser(beforeFile)(getDataFromFile(afterFile));
   return {
     ...calculateDifferenceForOneFile(beforeJson, afterJson,
       propertySymbol.remove, propertySymbol.add),

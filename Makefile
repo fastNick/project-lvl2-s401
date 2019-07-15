@@ -2,10 +2,10 @@ install:
 	npm install
 
 start:
-	npx babel-node -- src/bin/gendiff.js 'before.json' 'after.json'
+	npx babel-node -- src/bin/gendiff.js 'before.yml' 'after.yml'
 	
 start-abs:
-	npx babel-node -- src/bin/gendiff.js '/home/nick/Hexlet/project-lvl2/project-lvl2-s401/json_files/before.json' '/home/nick/Hexlet/project-lvl2/project-lvl2-s401/json_files/after.json'
+	npx babel-node -- src/bin/gendiff.js '/home/nick/Hexlet/project-lvl2/project-lvl2-s401/comparison_files/before.json' '/home/nick/Hexlet/project-lvl2/project-lvl2-s401/comparison_files/after.json'
 
 publish:
 	npm publish --dry-run
