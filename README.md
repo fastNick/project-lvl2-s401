@@ -7,4 +7,6 @@
 
 [![asciicast](https://asciinema.org/a/J8uX8DAbcv0HQcaDYl2TcjCga.svg)](https://asciinema.org/a/J8uX8DAbcv0HQcaDYl2TcjCga)
 
+[![asciicast](https://asciinema.org/a/l9vVOCfPAjGnmk3Xms7gHF1G2.svg)](https://asciinema.org/a/l9vVOCfPAjGnmk3Xms7gHF1G2)
+
 [![Build Status](https://travis-ci.org/fastNick/project-lvl2-s401.svg?branch=master)](https://travis-ci.org/fastNick/project-lvl2-s401)
