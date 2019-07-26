@@ -1,5 +1,5 @@
 import commander from 'commander';
-import { calculateDifferenceForTwoFiles } from '../lib/helper';
+import { calculateDiff, renderDiff } from '../lib/helper';
 
 export default () => commander
   .description('Compares two configuration files and shows a difference.')
@@ -7,6 +7,6 @@ export default () => commander
   .option('-V, --version', 'output the version number')
   .option('-f, --format [type]', 'Output format')
   .action((firstConfig, secondConfig) => {
-    console.log(calculateDifferenceForTwoFiles(firstConfig, secondConfig));
+    console.log(renderDiff(calculateDiff(firstConfig, secondConfig)));
   })
   .parse(process.argv);

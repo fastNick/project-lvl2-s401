@@ -1,5 +1,7 @@
-import { calculateDifferenceForTwoFiles as calcDiff } from './lib/helper';
+import { calculateDiff, renderDiff } from './lib/helper';
 
-const diff = (firstConfig, secondConfig) => calcDiff(firstConfig, secondConfig);
+export const gendiff = (firstConfig, secondConfig) => calculateDiff(firstConfig, secondConfig);
 
-export default diff;
+export const render = (firstConfig, secondConfig) => renderDiff(
+  calculateDiff(firstConfig, secondConfig),
+);
