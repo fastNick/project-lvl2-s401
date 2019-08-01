@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">87.5% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>28/32</span>
+        <span class='fraction'>22/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>4/5</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>13/13</span>
+        <span class='fraction'>12/12</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">86.21% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>25/29</span>
+        <span class='fraction'>19/19</span>
       </div>
     </div>
     <p class="quiet">
@@ -90,45 +90,11 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,27 +137,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
   has, flattenDeep,
 } from 'lodash';
-import { readFileSync } from 'fs';
-import { join as buildPath, isAbsolute as isPathAbsolute, resolve } from 'path';
-import getParser from './parsers';
+import getParser from '../parsers';
 import getRender from '../renders';
 import buildNode from '../nodes';
 &nbsp;
-const comparisonFilesPath = buildPath(__dirname, '../../', 'comparison__files');
-&nbsp;
-export const getDataFromFile = (filePath) =&gt; {
-  try {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!isPathAbsolute(filePath)) {
-      const fullFilePath = buildPath(comparisonFilesPath, filePath);
-      return readFileSync(fullFilePath, 'utf8');
-    }
-    const absoluteFilePath = <span class="cstat-no" title="statement not covered" >resolve(filePath);</span>
-<span class="cstat-no" title="statement not covered" >    return readFileSync(absoluteFilePath, 'utf8');</span>
-  } catch (err) {
-<span class="cstat-no" title="statement not covered" >    console.log(`Error: ${err}`);</span>
-<span class="cstat-no" title="statement not covered" >    return 'Error';</span>
-  }
-};
 &nbsp;
 const getObjectDiff = (beforeObject, afterObject) =&gt; {
   const firstAcc = Object.keys(beforeObject)
@@ -206,10 +155,10 @@ const getObjectDiff = (beforeObject, afterObject) =&gt; {
     firstAcc);
 };
 &nbsp;
-export const calculateDiff = (beforeFile, afterFile) =&gt; {
-  const mainObj1 = getParser(beforeFile)(getDataFromFile(beforeFile));
-  const mainObj2 = getParser(beforeFile)(getDataFromFile(afterFile));
-  return getObjectDiff(mainObj1, mainObj2);
+export const calculateDiff = (beforeSource, afterSource) =&gt; {
+  const beforeObject = getParser(beforeSource);
+  const afterObject = getParser(afterSource);
+  return getObjectDiff(beforeObject, afterObject);
 };
 &nbsp;
 &nbsp;
@@ -235,7 +184,7 @@ export const renderDiff = (data) =&gt; {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Jul 31 2019 21:18:13 GMT+0300 (EEST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Aug 01 2019 18:35:29 GMT+0300 (EEST)
 </div>
 </div>
 <script src="../../prettify.js"></script>
