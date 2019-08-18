@@ -22,16 +22,6 @@
         },
         {
             "type": "node",
-            "request": "launch",
-            "name": "Debug",
-            "program": "sayHi -h",
-            "sourceMaps": true,
-            "args": [
-                "-h"
-            ]
-        }
-        {
-            "type": "node",
             "name": "vscode-jest-tests",
             "request": "launch",
             "program": "${workspaceFolder}/node_modules/jest/bin/jest",
@@ -42,6 +32,21 @@
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
             "disableOptimisticBPs": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Entrance Point",
+            "program": "${workspaceFolder}/src/index.js",
+            "args": [
+                "--inspect-brk",
+                "--require", "babel-core/register",                
+                "--timeout", "999999",
+                "--colors"
+            ],
+            "port": 9229,
+            "internalConsoleOptions": "openOnSessionStart",
+            "sourceMaps": true
         }
     ]
 }
