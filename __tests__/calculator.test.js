@@ -1,59 +1,81 @@
 import { readFileSync } from 'fs';
 import { join as buildPath } from 'path';
-import gendiff from 'gendiff';
+import gendiff from 'gendiff-nick';
+import {
+  expectedDefaultFlatData, expectedDefaultRecursiveData, expectedPlainRecursiveData,
+  expectedJsonRecursiveData, beforeFlatJsonData, afterFlatJsonData,
+  beforeFlatIniData, afterFlatIniData,
+  beforeFlatYmlData, afterFlatYmlData, beforeRecursiveJsonData,
+  beforeRecursiveIniData, afterRecursiveIniData,
+  afterRecursiveJsonData, beforeRecursiveYmlData, afterRecursiveYmlData,
+  plainFormat, defaultFormat, jsonFormat,
+} from './helper/constants';
+
+import getPath from './helper/generic';
 
 describe('Test #1. Calculate difference for flat structures of default format', () => {
-  const lines = readFileSync(buildPath(__dirname, './__fixtures__/default/expected-flat.txt'), 'utf8');
+  const lines = readFileSync(buildPath(__dirname, expectedDefaultFlatData), 'utf8');
   test.each([
-    ['before.json', 'after.json'],
-    ['before.ini', 'after.ini'],
-    ['before.yml', 'after.yml'],
+    [beforeFlatJsonData, afterFlatJsonData],
+    [beforeFlatIniData, afterFlatIniData],
+    [beforeFlatYmlData, afterFlatYmlData],
   ])(
     'gendiff(%s, %s)',
     (before, after) => {
-      expect(gendiff(before, after, 'default')).toEqual(lines);
+      const beforeData = getPath(before);
+      const afterData = getPath(after);  
+      expect(gendiff(beforeData, afterData, defaultFormat)).toEqual(lines);
     },
   );
 });
 
 describe('Test #2. Calculate difference for recursive structures of default format', () => {
-  const lines = readFileSync(buildPath(__dirname, './__fixtures__/default/expected-recursive.txt'), 'utf8');
+  const lines = readFileSync(buildPath(__dirname, expectedDefaultRecursiveData), 'utf8');
   test.each([
-    ['before-recursive.json', 'after-recursive.json'],
-    ['before-recursive.ini', 'after-recursive.ini'],
-    ['before-recursive.yml', 'after-recursive.yml'],
+    [beforeRecursiveJsonData, afterRecursiveJsonData],
+    [beforeRecursiveIniData, afterRecursiveIniData],
+    [beforeRecursiveYmlData, afterRecursiveYmlData],
   ])(
     'gendiff(%s, %s)',
     (before, after) => {
-      expect(gendiff(before, after, 'default')).toEqual(lines);
+      const beforeData = getPath(before);
+      const afterData = getPath(after);
+      const result = gendiff(beforeData, afterData, defaultFormat);
+      expect(result).toEqual(lines);
     },
   );
 });
 
 describe('Test #3. Calculate difference for recursive structures of plain format', () => {
-  const lines = readFileSync(buildPath(__dirname, './__fixtures__/plain/expected.txt'), 'utf8');
+  const lines = readFileSync(buildPath(__dirname, expectedPlainRecursiveData), 'utf8');
   test.each([
-    ['before-recursive.json', 'after-recursive.json'],
-    ['before-recursive.ini', 'after-recursive.ini'],
-    ['before-recursive.yml', 'after-recursive.yml'],
+    [beforeRecursiveJsonData, afterRecursiveJsonData],
+    [beforeRecursiveIniData, afterRecursiveIniData],
+    [beforeRecursiveYmlData, afterRecursiveYmlData],
   ])(
     'gendiff(%s, %s)',
     (before, after) => {
-      expect(gendiff(before, after, 'plain')).toEqual(lines);
+      const beforeData = getPath(before);
+      const afterData = getPath(after);
+      const result = gendiff(beforeData, afterData, plainFormat);
+      expect(result).toEqual(lines);
     },
   );
 });
 
 describe('Test #4. Calculate difference for recursive structures of json format', () => {
-  const lines = readFileSync(buildPath(__dirname, './__fixtures__/json/expected.txt'), 'utf8');
+  const lines = readFileSync(buildPath(__dirname, expectedJsonRecursiveData), 'utf8');
   test.each([
-    ['before-recursive.json', 'after-recursive.json'],
-    ['before-recursive.ini', 'after-recursive.ini'],
-    ['before-recursive.yml', 'after-recursive.yml'],
+    [beforeRecursiveJsonData, afterRecursiveJsonData],
+    [beforeRecursiveIniData, afterRecursiveIniData],
+    [beforeRecursiveYmlData, afterRecursiveYmlData],
   ])(
     'gendiff(%s, %s)',
-    (before, after) => {      
-      expect(gendiff(before, after, 'json')).toEqual(lines);
+    (before, after) => {
+      const beforeData = getPath(before);
+      const afterData = getPath(after);
+      const result = gendiff(beforeData, afterData, jsonFormat);
+      expect(result).toEqual(lines);
     },
   );
 });
