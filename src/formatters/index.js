@@ -1,15 +1,15 @@
-import defaultRenderDiff from './defaults';
-import plainRenderDiff from './plains';
-import jsonRenderDiff from './jsons';
+import defaultRender from './defaults';
+import plainRender from './plains';
+import jsonRender from './jsons';
 
 const getRender = (AST, format) => {
   switch (format) {
     case 'default':
-      return defaultRenderDiff(AST);
+      return defaultRender(AST);
     case 'plain':
-      return plainRenderDiff(AST);
+      return plainRender(AST);
     case 'json':
-      return jsonRenderDiff(AST);
+      return jsonRender(AST);
     default:
       throw new Error('Unsupported type of render');
   }

@@ -9,6 +9,6 @@
 
 [![asciicast](https://asciinema.org/a/l9vVOCfPAjGnmk3Xms7gHF1G2.svg)](https://asciinema.org/a/l9vVOCfPAjGnmk3Xms7gHF1G2)
 
-[![asciicast](https://asciinema.org/a/WC2c0bWeC1AWvFkqKZjMVPrFS.svg)](https://asciinema.org/a/WC2c0bWeC1AWvFkqKZjMVPrFS)
+[![asciicast](https://asciinema.org/a/suxat99WTj39ssitIvDMpoHy3.svg)](https://asciinema.org/a/suxat99WTj39ssitIvDMpoHy3)
 
 [![Build Status](https://travis-ci.org/fastNick/project-lvl2-s401.svg?branch=master)](https://travis-ci.org/fastNick/project-lvl2-s401)

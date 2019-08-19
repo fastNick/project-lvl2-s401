@@ -32,9 +32,9 @@ const traverseTree = (tree, parent) => {
   return flattenDeep(iter(tree, parent)).join(',');
 };
 
-const renderDiff = (AST) => {
+const render = (AST) => {
   const result = getPlainRender(AST.root, traverseTree).toString();
   return JSON.stringify(JSON.parse(result));
 };
 
-export default renderDiff;
+export default render;

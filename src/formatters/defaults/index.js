@@ -8,6 +8,6 @@ const traverseTree = (tree, parent) => {
   return flattenDeep(iter(tree, parent));
 };
 
-const renderDiff = AST => getNodeRender(AST.root, traverseTree).toString();
+const render = AST => getNodeRender(AST.root, traverseTree).toString();
 
-export default renderDiff;
+export default render;
