@@ -3,7 +3,7 @@ import { readFileSync } from 'fs';
 
 
 const getData = (source) => {
-  try {    
+  try {
     return readFileSync(source, 'utf8');
   } catch (err) {
     console.log(`Error: ${err}`);

@@ -23,7 +23,7 @@ describe('Test #1. Calculate difference for flat structures of default format', 
     'gendiff(%s, %s)',
     (before, after) => {
       const beforeData = getPath(before);
-      const afterData = getPath(after);  
+      const afterData = getPath(after);
       expect(gendiff(beforeData, afterData, defaultFormat)).toEqual(lines);
     },
   );
@@ -40,8 +40,7 @@ describe('Test #2. Calculate difference for recursive structures of default form
     (before, after) => {
       const beforeData = getPath(before);
       const afterData = getPath(after);
-      const result = gendiff(beforeData, afterData, defaultFormat);
-      expect(result).toEqual(lines);
+      expect(gendiff(beforeData, afterData, defaultFormat)).toEqual(lines);
     },
   );
 });
@@ -57,8 +56,7 @@ describe('Test #3. Calculate difference for recursive structures of plain format
     (before, after) => {
       const beforeData = getPath(before);
       const afterData = getPath(after);
-      const result = gendiff(beforeData, afterData, plainFormat);
-      expect(result).toEqual(lines);
+      expect(gendiff(beforeData, afterData, plainFormat)).toEqual(lines);
     },
   );
 });
@@ -74,8 +72,7 @@ describe('Test #4. Calculate difference for recursive structures of json format'
     (before, after) => {
       const beforeData = getPath(before);
       const afterData = getPath(after);
-      const result = gendiff(beforeData, afterData, jsonFormat);
-      expect(result).toEqual(lines);
+      expect(gendiff(beforeData, afterData, jsonFormat)).toEqual(lines);
     },
   );
 });
