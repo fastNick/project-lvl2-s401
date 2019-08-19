@@ -13,6 +13,5 @@ install:
 - npm install
 script:
 - make test
-- make coveralls
 after_script:
   - npm run ci-process-cover
