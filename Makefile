@@ -11,10 +11,10 @@ publish:
 	npm publish --dry-run
 
 lint:
-	npx eslint --debug --fix .
+	npx eslint --debug .
 
 test:
-	npm run test
+	npm test
 
-make build:
+build:
 	npm run build
