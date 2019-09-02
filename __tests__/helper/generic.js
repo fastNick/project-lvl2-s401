@@ -1,20 +1,13 @@
-import { join as buildPath, isAbsolute, resolve } from 'path';
+import { resolve } from 'path';
 import {
-  comparisonPath, expectedPath, after, before,
+  comparisonPath, expectedPath,
 } from './constants';
 
-const getPath = source => (isAbsolute(source)
-  ? resolve(source) : buildPath(__dirname, source));
+const getComparisonPath = (position, dataType) => resolve(__dirname,
+  comparisonPath, `${dataType}/${position}.${dataType}`);
 
-export default getPath;
+export const getBeforePath = dataType => getComparisonPath('before', dataType);
+export const getAfterPath = dataType => getComparisonPath('after', dataType);
 
-const getComparisonPath = (position, dataType, structure) => buildPath(__dirname,
-  comparisonPath, `${dataType}/${structure}/${position}.${dataType}`);
-
-export const getBeforePath = (dataType, structure) => getComparisonPath(before,
-  dataType, structure);
-
-export const getAfterPath = (dataType, structure) => getComparisonPath(after, dataType, structure);
-
-export const getExpectedPath = (format, structure) => buildPath(__dirname,
-  expectedPath, `${format}/${structure}.txt`);
+export const getExpectedPath = format => resolve(__dirname,
+  expectedPath, `${format}.txt`);
