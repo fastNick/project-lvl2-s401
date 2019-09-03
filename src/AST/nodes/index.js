@@ -9,26 +9,25 @@ import RootNode from './RootNode';
 export const buildInnerNode = (beforeObject, afterObject, key, traverseTreeFunc, parent) => {
   const beforePropertyValue = beforeObject[key];
   const afterPropertyValue = afterObject[key];
-  if (!has(afterObject, key)) {
-    return new RemovedNode(key, beforePropertyValue, parent);
-  }
 
-  if (!has(beforeObject, key)) {
-    return new AddedNode(key, afterPropertyValue, parent);
-  }
 
-  if (isPlainObject(beforePropertyValue) && isPlainObject(afterPropertyValue)) {
-    const node = new NodeWithChildren(key);
-    node.children = traverseTreeFunc(beforePropertyValue, afterPropertyValue, node);
-    node.parent = parent;
-    return node;
+  switch (true) {
+    case !has(afterObject, key):
+      return new RemovedNode(key, beforePropertyValue, parent);
+    case !has(beforeObject, key):
+      return new AddedNode(key, afterPropertyValue, parent);
+    case isPlainObject(beforePropertyValue) && isPlainObject(afterPropertyValue): {
+      const node = new NodeWithChildren(key);
+      node.children = traverseTreeFunc(beforePropertyValue, afterPropertyValue, node);
+      node.parent = parent;
+      return node;
+    }
+    case beforePropertyValue === afterPropertyValue:
+      return new NonUpdatedNode(key, beforePropertyValue, parent);
+    default:
+      return new UpdatedNode(key, beforePropertyValue, afterPropertyValue, parent);
   }
-
-  if (beforePropertyValue === afterPropertyValue) {
-    return new NonUpdatedNode(key, beforePropertyValue, parent);
-  }
-
-  return new UpdatedNode(key, beforePropertyValue, afterPropertyValue, parent);
 };
+
 
 export const buildRootNode = children => new RootNode(children);
