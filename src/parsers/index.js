@@ -1,23 +1,8 @@
 import {
   extname,
 } from 'path';
+import dataTypeMapper from './generic';
 
-import IniParser from './IniParser';
-import JsonParser from './JsonParser';
-import YamlParser from './YamlParser';
-
-
-const convertToObject = (source) => {
-  switch (extname(source)) {
-    case '.yml':
-      return new YamlParser(source).toObject();
-    case '.json':
-      return new JsonParser(source).toObject();
-    case '.ini':
-      return new IniParser(source).toObject();
-    default:
-      throw new Error('Unsopported extension of source');
-  }
-};
+const convertToObject = source => dataTypeMapper[extname(source)](source);
 
 export default convertToObject;
