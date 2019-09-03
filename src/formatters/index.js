@@ -1,19 +1,5 @@
-import defaultRender from './defaults';
-import plainRender from './plains';
-import jsonRender from './jsons';
+import renderMapper from './generic';
 
-const getRender = (AST, format) => {
-  switch (format) {
-    case 'default':
-      return defaultRender(AST);
-    case 'plain':
-      return plainRender(AST);
-    case 'json':
-      return jsonRender(AST);
-    default:
-      throw new Error('Unsupported type of render');
-  }
-};
-
+const getRender = (AST, format) => renderMapper[format](AST);
 
 export default getRender;
