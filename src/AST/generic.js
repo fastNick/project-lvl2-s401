@@ -16,15 +16,15 @@ export const sort = (ASTree) => {
   return buildAst(rootNode);
 };
 
-export const buildASTInnerNodes = (beforeObject, afterObject, parentNode) => {
+export const buildASTInnerNodes = (beforeObject, afterObject) => {
   const firstAcc = Object.keys(beforeObject)
     .reduce((acc, key) => acc
-      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes, parentNode)),
+      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes)),
     []);
 
   return Object.keys(afterObject)
     .filter(key => !has(beforeObject, key))
     .reduce((acc, key) => acc
-      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes, parentNode)),
+      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes)),
     firstAcc);
 };
