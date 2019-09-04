@@ -4,7 +4,7 @@ import {
 } from './constants';
 
 
-function RootNodeDefaultRender(node, recursiveFunc) {
+function RootNodeDefaultRender(node, parent, recursiveFunc) {
   this.children = recursiveFunc(node.children, this);
   this.leftPadding = paddingInitial;
 }

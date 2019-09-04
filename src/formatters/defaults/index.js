@@ -1,5 +1,5 @@
 import { flattenDeep } from 'lodash';
-import { getNodeRender } from './helper';
+import getNodeRender from './helper';
 
 const traverseTree = (tree, parent) => {
   const iter = (data, parentNode) => data.reduce((acc, node) => acc

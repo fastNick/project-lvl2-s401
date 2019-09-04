@@ -5,7 +5,7 @@ import {
   nonUpdatedSign, leftCurl, rightCurl, paddingSymbol, newLine,
 } from './constants';
 
-function NodeWithChildrenDefaultRender(node, recursiveFunc, parent) {
+function NodeWithChildrenDefaultRender(node, parent, recursiveFunc) {
   DefaultRender.apply(this, [node, nonUpdatedSign, parent]);
   this.children = recursiveFunc(node.children, this);
 }

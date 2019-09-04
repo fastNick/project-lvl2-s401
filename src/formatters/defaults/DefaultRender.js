@@ -1,10 +1,7 @@
-import { isPlainObject, flattenDeep } from 'lodash';
-import {
-  nonUpdatedSign,
-  rightCurl, leftCurl, afterKeySeparator, paddingSymbol, paddingFromKey, paddingFromSign, newLine,
-} from './constants';
+import { isPlainObject } from 'lodash';
+import { afterKeySeparator } from './constants';
 import LeftPadding from './lib/LeftPadding';
-
+import stringifyObject from './generic';
 
 function DefaultRender(node, sign, parent = null) {
   const {
@@ -18,21 +15,7 @@ function DefaultRender(node, sign, parent = null) {
   this.leftPadding = new LeftPadding(this.parent, this.sign);
 
   this.stringify = function stringify(data) {
-    if (isPlainObject(data)) {
-      const property = Object.keys(data)
-        .reduce((acc, currentKey) => {
-          const currentPadding = [paddingSymbol.repeat(this.leftPadding), paddingSymbol
-            .repeat(paddingFromSign),
-          nonUpdatedSign, paddingSymbol.repeat(paddingFromKey)];
-          return acc.concat([currentPadding, currentKey, afterKeySeparator, data[currentKey], '\n']);
-        }, []);
-      return flattenDeep([leftCurl,
-        newLine,
-        property,
-        paddingSymbol.repeat(this.leftPadding),
-        rightCurl]).join('');
-    }
-    return data;
+    return isPlainObject(data) ? stringifyObject(data, this.leftPadding) : data;
   };
 }
 

@@ -1,14 +1,11 @@
-import { isPlainObject } from 'lodash';
 import { complexValue } from './constants';
 
-const stringify = (data) => {
-  if (isPlainObject(data)) {
-    return complexValue;
-  }
-  if (typeof (data) === 'string') {
-    return `'${data}'`;
-  }
-  return data;
+const stringifyMapper = {
+  object: () => complexValue,
+  string: data => `'${data}'`,
 };
+
+const stringify = data => (stringifyMapper[typeof data] ? stringifyMapper[typeof data](data)
+  : data);
 
 export default stringify;
