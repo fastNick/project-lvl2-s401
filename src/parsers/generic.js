@@ -1,9 +1,9 @@
-import IniParser from './IniParser';
-import JsonParser from './JsonParser';
-import YamlParser from './YamlParser';
+import { parse as parseIni } from 'ini';
+import { safeLoad } from 'js-yaml';
+
 
 export default {
-  '.yml': source => new YamlParser(source).toObject(),
-  '.json': source => new JsonParser(source).toObject(),
-  '.ini': source => new IniParser(source).toObject(),
+  '.yml': data => safeLoad(data),
+  '.json': data => JSON.parse(data),
+  '.ini': data => parseIni(data),
 };

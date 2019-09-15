@@ -1,8 +1,5 @@
-import {
-  extname,
-} from 'path';
 import dataTypeMapper from './generic';
 
-const convertToObject = source => dataTypeMapper[extname(source)](source);
+const convertToObject = ({ extension, lines }) => dataTypeMapper[extension](lines);
 
 export default convertToObject;
