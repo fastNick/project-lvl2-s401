@@ -1,14 +1,14 @@
-import convertToObject from '../parsers';
-import { buildRootNode } from './nodes';
-import { buildAst, buildASTInnerNodes } from './generic';
+import _ from 'lodash';
+import getKeyByType from './generic';
 
+const getAst = (firstConfig = {}, secondConfig = {}) => {
+  const configKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
 
-const getDiffAST = (dataBefore, dataAfter) => {
-  const before = convertToObject(dataBefore);
-  const after = convertToObject(dataAfter);
-  const rootNodeChildren = buildASTInnerNodes(before, after);
-  const rootNode = buildRootNode(rootNodeChildren);
-  return buildAst(rootNode);
+  return configKeys.map((key) => {
+    const { type, process } = getKeyByType(firstConfig, secondConfig, key);
+    const value = process(firstConfig[key], secondConfig[key], getAst);
+    return { name: type, key, value };
+  });
 };
 
-export default getDiffAST;
+export default getAst;

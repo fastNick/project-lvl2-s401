@@ -1,30 +1,37 @@
-import {
-  has,
-} from 'lodash';
-import { buildInnerNode, buildRootNode } from './nodes';
-import AST from './AST';
+import _ from 'lodash';
 
-export const buildAst = rootNode => new AST(rootNode);
+const keyTypes = [
+  {
+    type: 'nested',
+    check: (first, second, key) => (first[key] instanceof Object && second[key] instanceof Object)
+      && !(first[key] instanceof Array && second[key] instanceof Array),
+    process: (first, second, func) => func(first, second),
+  },
+  {
+    type: 'not changed',
+    check: (first, second, key) => (_.has(first, key) && _.has(second, key)
+      && (first[key] === second[key])),
+    process: first => _.identity(first),
+  },
+  {
+    type: 'changed',
+    check: (first, second, key) => (_.has(first, key) && _.has(second, key)
+      && (first[key] !== second[key])),
+    process: (first, second) => ({ old: first, new: second }),
+  },
+  {
+    type: 'deleted',
+    check: (first, second, key) => (_.has(first, key) && !_.has(second, key)),
+    process: first => _.identity(first),
+  },
+  {
+    type: 'inserted',
+    check: (first, second, key) => (!_.has(first, key) && _.has(second, key)),
+    process: (first, second) => _.identity(second),
+  },
+];
 
-export const sort = (ASTree) => {
-  const iter = tree => tree
-    .sort((x, y) => x.key.localeCompare(y.key))
-    .map(node => (node.children.length
-      ? new node.constructor(node.key, iter(node.children.slice())) : node));
-  const sortedInnerNodes = iter(ASTree.root.children);
-  const rootNode = buildRootNode(sortedInnerNodes);
-  return buildAst(rootNode);
-};
+const getKeyByType = (first, second, key) => keyTypes
+  .find(({ check }) => check(first, second, key));
 
-export const buildASTInnerNodes = (beforeObject, afterObject) => {
-  const firstAcc = Object.keys(beforeObject)
-    .reduce((acc, key) => acc
-      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes)),
-    []);
-
-  return Object.keys(afterObject)
-    .filter(key => !has(beforeObject, key))
-    .reduce((acc, key) => acc
-      .concat(buildInnerNode(beforeObject, afterObject, key, buildASTInnerNodes)),
-    firstAcc);
-};
+export default getKeyByType;
