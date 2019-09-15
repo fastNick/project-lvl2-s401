@@ -1,18 +1,18 @@
 import { pathSeparator } from './constants';
 
-function PlainRender(node, parentRenderNode, recursiveFunc) {
+const getPath = (parentRender, key) => (parentRender.parentRenderNode
+  ? [getPath(parentRender.parentRenderNode, parentRender.key), key]
+    .join(pathSeparator) : key);
+
+
+function PlainRender(node, parentRenderNode) {
   this.node = node;
-  this.key = this.node.key;
-  this.value = this.node.value;
+  this.key = node.key;
   this.parentRenderNode = parentRenderNode;
-  this.path = this.parentRenderNode && this.parentRenderNode.path
-    ? [this.parentRenderNode.path, this.key]
-      .join(pathSeparator) : this.key;
-  this.children = this.node.children.length ? recursiveFunc(this.node.children, this) : [];
 }
 
 PlainRender.prototype.toString = function toString() {
-  return `Property '${this.path}' was `;
+  return `Property '${getPath(this.parentRenderNode, this.key)}' was `;
 };
 
 export default PlainRender;

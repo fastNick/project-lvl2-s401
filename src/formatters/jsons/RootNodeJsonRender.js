@@ -6,7 +6,8 @@ import {
 
 function RootNodeJsonRender(node, recursiveFunc) {
   this.parentRenderNode = null;
-  JsonRender.apply(this, [node, this.parentRenderNode, recursiveFunc]);
+  JsonRender.apply(this, [node, this.parentRenderNode]);
+  this.children = recursiveFunc(node, this);
 }
 
 RootNodeJsonRender.prototype.toString = function toString() {

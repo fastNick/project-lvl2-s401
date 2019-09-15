@@ -3,8 +3,8 @@ import PlainRender from './PlainRender';
 
 function UpdatedNodePlainRender(node, parentRenderNode) {
   PlainRender.apply(this, [node, parentRenderNode]);
-  this.valueBefore = this.node.valueBefore;
-  this.valueAfter = this.node.valueAfter;
+  this.valueBefore = node.value.old;
+  this.valueAfter = node.value.new;
 }
 
 UpdatedNodePlainRender.prototype.toString = function toString() {

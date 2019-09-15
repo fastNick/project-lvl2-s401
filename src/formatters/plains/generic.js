@@ -2,14 +2,14 @@ import RemovedNodePlainRender from './RemovedNodePlainRender';
 import AddedNodePlainRender from './AddedNodePlainRender';
 import UpdatedNodePlainRender from './UpdatedNodePlainRender';
 import NodeWithChildrenPlainRender from './NodeWithChildrenPlainRender';
-import RootNodePlainRender from './RootNodePlainRender';
+import NotChangedNodeRender from './NotChangedNodeRender';
 
 const formatsByASTNode = {
-  RootNode: RootNodePlainRender,
-  NodeWithChildren: NodeWithChildrenPlainRender,
-  UpdatedNode: UpdatedNodePlainRender,
-  RemovedNode: RemovedNodePlainRender,
-  AddedNode: AddedNodePlainRender,
+  nested: NodeWithChildrenPlainRender,
+  changed: UpdatedNodePlainRender,
+  deleted: RemovedNodePlainRender,
+  inserted: AddedNodePlainRender,
+  'not changed': NotChangedNodeRender,
 };
 
 export default formatsByASTNode;

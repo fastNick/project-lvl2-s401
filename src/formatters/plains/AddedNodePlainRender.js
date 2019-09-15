@@ -4,6 +4,7 @@ import stringify from './helper';
 
 function AddedNodePlainRender(node, parentRenderNode) {
   PlainRender.apply(this, [node, parentRenderNode]);
+  this.value = node.value;
 }
 
 AddedNodePlainRender.prototype.toString = function toString() {

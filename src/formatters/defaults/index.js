@@ -1,13 +1,7 @@
-import { flattenDeep } from 'lodash';
-import getNodeRender from './helper';
+import getDefaultRender from './helper';
 
-const traverseTree = (tree, parent) => {
-  const iter = (data, parentNode) => data.reduce((acc, node) => acc
-    .concat(getNodeRender(node, iter, parentNode)),
-  []);
-  return flattenDeep(iter(tree, parent));
-};
+const traverseTree = (ast, parent) => ast.map(node => getDefaultRender(node, traverseTree, parent));
 
-const render = AST => getNodeRender(AST.root, traverseTree).toString();
+const render = AST => getDefaultRender(AST, traverseTree).toString();
 
 export default render;

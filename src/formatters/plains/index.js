@@ -1,21 +1,18 @@
-import { flattenDeep } from 'lodash';
-import NonUpdatedNode from '../../AST/nodes/NonUpdatedNode';
 import formatsByASTNode from './generic';
+import RootNodePlainRender from './RootNodePlainRender';
 
-export const getPlainRender = (node, parent, recursiveFunc) => {
-  const astNode = node.constructor.name;
+export const getPlainRender = (node, recursiveFunc, parent) => {
+  if (node instanceof Array) {
+    return new RootNodePlainRender(node, recursiveFunc);
+  }
+  const astNode = node.name;
   const Render = formatsByASTNode[astNode];
   return new Render(node, parent, recursiveFunc);
 };
 
-const traverseTree = (tree, parentRenderNode) => {
-  const iter = (data, parent) => data.reduce((acc, node) => (node instanceof NonUpdatedNode ? acc
-    : acc
-      .concat(getPlainRender(node, parent, iter))),
-  []);
-  return flattenDeep(iter(tree, parentRenderNode)).join('\n');
-};
+const traverseTree = (ast, parent) => ast.map(node => getPlainRender(node, traverseTree, parent));
 
-const render = AST => getPlainRender(AST.root, traverseTree).toString();
+
+const render = AST => getPlainRender(AST, traverseTree).toString();
 
 export default render;

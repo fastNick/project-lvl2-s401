@@ -1,24 +1,26 @@
-import RemovedNodeDefaultRender from './RemovedNodeDefaultRender';
-import AddedNodeDefaultRender from './AddedNodeDefaultRender';
-import NodeWithChildrenDefaultRender from './NodeWithChildrenDefaultRender';
-import NonUpdatedNodeDefaultRender from './NonUpdatedNodeDefaultRender';
-import RootNodeDefaultRender from './RootNodeDefaultRender';
-import UpdatedNodeDefaultRender from './UpdatedNodeDefaultRender';
+import DeletedNodeRender from './DeletedNodeRender';
+import InsertedNodeRender from './InsertedNodeRender';
+import NestedNodeRender from './NestedNodeRender';
+import NotChangedNodeRender from './NotChangedNodeRender';
+import ChangedNodeRender from './ChangedNodeRender';
+import RootNodeRender from './RootNodeRender';
 
 
 const formatsByASTNode = {
-  RootNode: RootNodeDefaultRender,
-  NodeWithChildren: NodeWithChildrenDefaultRender,
-  UpdatedNode: UpdatedNodeDefaultRender,
-  NonUpdatedNode: NonUpdatedNodeDefaultRender,
-  RemovedNode: RemovedNodeDefaultRender,
-  AddedNode: AddedNodeDefaultRender,
+  nested: NestedNodeRender,
+  changed: ChangedNodeRender,
+  'not changed': NotChangedNodeRender,
+  deleted: DeletedNodeRender,
+  inserted: InsertedNodeRender,
 };
 
-const getNodeRender = (node, recursiveFunc, parent) => {
-  const astNode = node.constructor.name;
+const getDefaultRender = (node, recursiveFunc, parent) => {
+  if (node instanceof Array) {
+    return new RootNodeRender(node, recursiveFunc);
+  }
+  const astNode = node.name;
   const Render = formatsByASTNode[astNode];
   return new Render(node, parent, recursiveFunc);
 };
 
-export default getNodeRender;
+export default getDefaultRender;

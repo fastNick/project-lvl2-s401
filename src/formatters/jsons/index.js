@@ -1,22 +1,20 @@
-import { flattenDeep } from 'lodash';
 import formatsByASTNode from './generic';
+import RootNodeJsonRender from './RootNodeJsonRender';
 
 
-const getPlainRender = (node, parentRenderNode, recursiveFunc) => {
-  const astNode = node.constructor.name;
+const getJsonRender = (node, recursiveFunc, parentRenderNode) => {
+  if (node instanceof Array) {
+    return new RootNodeJsonRender(node, recursiveFunc);
+  }
+  const astNode = node.name;
   const Render = formatsByASTNode[astNode];
   return new Render(node, parentRenderNode, recursiveFunc);
 };
 
-const traverseTree = (tree, parent) => {
-  const iter = (data, parentNode) => data.reduce((acc, node) => acc
-    .concat(getPlainRender(node, parentNode, iter)),
-  []);
-  return flattenDeep(iter(tree, parent)).join(',');
-};
+const traverseTree = (ast, parent) => ast.map(node => getJsonRender(node, traverseTree, parent));
 
 const render = (AST) => {
-  const result = getPlainRender(AST.root, traverseTree).toString();
+  const result = getJsonRender(AST, traverseTree).toString();
   return JSON.stringify(JSON.parse(result));
 };
 

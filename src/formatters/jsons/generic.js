@@ -3,15 +3,13 @@ import AddedNodeJsonRender from './AddedNodeJsonRender';
 import UpdatedNodeJsonRender from './UpdatedNodeJsonRender';
 import NodeWithChildrenJsonRender from './NodeWithChildrenJsonRender';
 import NonUpdatedNodeJsonRender from './NonUpdatedNodeJsonRender';
-import RootNodeJsonRender from './RootNodeJsonRender';
 
 const formatsByASTNode = {
-  RootNode: RootNodeJsonRender,
-  NodeWithChildren: NodeWithChildrenJsonRender,
-  UpdatedNode: UpdatedNodeJsonRender,
-  NonUpdatedNode: NonUpdatedNodeJsonRender,
-  RemovedNode: RemovedNodeJsonRender,
-  AddedNode: AddedNodeJsonRender,
+  nested: NodeWithChildrenJsonRender,
+  changed: UpdatedNodeJsonRender,
+  'not changed': NonUpdatedNodeJsonRender,
+  deleted: RemovedNodeJsonRender,
+  inserted: AddedNodeJsonRender,
 };
 
 export default formatsByASTNode;
