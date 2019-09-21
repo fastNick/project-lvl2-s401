@@ -5,7 +5,7 @@ start:
 	npx babel-node -- src/bin/gendiff.js --format default __tests__/__fixtures__/comparison/yml/before.yml __tests__/__fixtures__/comparison/yml/after.yml
 	
 publish:
-	npm publish --dry-run
+	npm publish
 
 lint:
 	npx eslint --debug .
