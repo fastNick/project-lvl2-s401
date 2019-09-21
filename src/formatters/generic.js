@@ -1,9 +1,11 @@
-import defaultRender from './defaults';
-import plainRender from './plains';
-import jsonRender from './jsons';
+import getDefaultFormatter from './default';
+import getPlainFormatter from './plain';
+import getJsonFormatter from './json';
 
-export default {
-  default: AST => defaultRender(AST),
-  plain: AST => plainRender(AST),
-  json: AST => jsonRender(AST),
-};
+const formattersByFormat = ({
+  default: render => getDefaultFormatter(render),
+  json: render => getJsonFormatter(render),
+  plain: render => getPlainFormatter(render),
+});
+
+export default formattersByFormat;

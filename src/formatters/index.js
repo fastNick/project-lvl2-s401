@@ -1,5 +1,5 @@
-import renderMapper from './generic';
+import formattersByFormat from './generic';
 
-const getRender = (AST, format) => renderMapper[format](AST);
+const getFormatter = render => formattersByFormat[render.format](render);
 
-export default getRender;
+export default getFormatter;
