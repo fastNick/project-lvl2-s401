@@ -1,7 +1,5 @@
 import commander from 'commander';
-import convertToObject from '../parsers';
-import gendiff from '..';
-import getData from '../lib/file';
+import getRenderedGenDiff from '..';
 
 export default () => commander
   .description('Compares two configuration files and shows a difference.')
@@ -9,11 +7,7 @@ export default () => commander
   .option('-V, --version', 'output the version number')
   .option('-f, --format [type]', 'Output format')
   .action((source1, source2, options) => {
-    const data1 = getData(source1);
-    const data2 = getData(source2);
-    const beforeObject = convertToObject(data1);
-    const afterObject = convertToObject(data2);
-    const result = gendiff(beforeObject, afterObject, options.format);
-    console.log(result);
+    const renderedGenDiff = getRenderedGenDiff(source1, source2, options.format);
+    console.log(renderedGenDiff);
   })
   .parse(process.argv);

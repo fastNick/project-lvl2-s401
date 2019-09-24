@@ -1,14 +1,5 @@
-import _ from 'lodash';
-import getKeyByType from './generic';
+import getSortedAstConfig from './generic';
 
-const getAst = (firstConfig = {}, secondConfig = {}) => {
-  const configKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
-
-  return configKeys.map((key) => {
-    const { type, process } = getKeyByType(firstConfig, secondConfig, key);
-    const value = process(firstConfig[key], secondConfig[key], getAst);
-    return { name: type, key, value };
-  });
-};
+const getAst = (firstConfig, secondConfig) => getSortedAstConfig(firstConfig, secondConfig);
 
 export default getAst;

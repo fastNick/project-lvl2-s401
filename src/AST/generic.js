@@ -34,4 +34,23 @@ const keyTypes = [
 const getKeyByType = (first, second, key) => keyTypes
   .find(({ check }) => check(first, second, key));
 
-export default getKeyByType;
+const getAstConfig = (firstConfig = {}, secondConfig = {}) => {
+  const configKeys = _.union(Object.keys(firstConfig), Object.keys(secondConfig));
+
+  return configKeys.map((key) => {
+    const { type, process } = getKeyByType(firstConfig, secondConfig, key);
+    const value = process(firstConfig[key], secondConfig[key], getAstConfig);
+    return { name: type, key, value };
+  });
+};
+
+const sort = ast => ast.sort((x, y) => x.key.localeCompare(y.key))
+  .map(node => (node.value instanceof Array
+    ? { ...node, value: sort(node.value) } : node));
+
+const getSortedAstConfig = (firstConfig = {}, secondConfig = {}) => {
+  const ast = getAstConfig(firstConfig, secondConfig);
+  return sort(ast);
+};
+
+export default getSortedAstConfig;
