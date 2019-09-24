@@ -1,5 +1,5 @@
 
-import gendiff from 'gendiff-nick';
+import gendiff from '../src';
 
 import {
   formats, dataTypes,
@@ -10,19 +10,16 @@ import {
 } from './helper/generic';
 
 import getData from '../src/lib/file';
-import convertToObject from '../src/parsers';
 
 describe(`Calculate difference for recursive structures of [${dataTypes}] types of data for different [${formats}] formats `, () => {
   formats.forEach((format) => {
     test.each(dataTypes)(
       `Test functionality of gendiff for .%s files in form of ${format} format`,
       (dataType) => {
-        const beforeData = getData(getBeforePath(dataType));
-        const beforeObject = convertToObject(beforeData);
-        const afterData = getData(getAfterPath(dataType));
-        const afterObject = convertToObject(afterData);
+        const beforePath = getBeforePath(dataType);
+        const afterPath = getAfterPath(dataType);
         const { lines } = getData(getExpectedPath(format));
-        const result = gendiff(beforeObject, afterObject, format);
+        const result = gendiff(beforePath, afterPath, format);
         expect(result).toEqual(lines);
       },
     );
