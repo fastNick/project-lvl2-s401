@@ -1,5 +1,5 @@
 import commander from 'commander';
-import getRenderedGenDiff from '..';
+import getRenderedGenDiff from '../..';
 
 export default printFunc => commander
   .description('Compares two configuration files and shows a difference.')
