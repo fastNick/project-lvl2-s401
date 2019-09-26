@@ -1,9 +1,9 @@
-import getDefaultFormatter from './default';
+import getJsonDiffFormatter from './jsonDiff';
 import getPlainFormatter from './plain';
 import getJsonFormatter from './json';
 
 const formattersByFormat = ({
-  default: render => getDefaultFormatter(render),
+  jsonDiff: render => getJsonDiffFormatter(render),
   json: render => getJsonFormatter(render),
   plain: render => getPlainFormatter(render),
 });

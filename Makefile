@@ -2,7 +2,7 @@ install:
 	npm install
 
 start:
-	npx babel-node -- src/bin/gendiff.js --format default __tests__/__fixtures__/comparison/yml/before.yml __tests__/__fixtures__/comparison/yml/after.yml
+	npx babel-node -- src/bin/gendiff.js --format jsonDiff __tests__/__fixtures__/comparison/yml/before.yml __tests__/__fixtures__/comparison/yml/after.yml
 	
 publish:
 	npm publish
