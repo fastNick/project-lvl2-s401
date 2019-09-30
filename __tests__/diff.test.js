@@ -1,4 +1,5 @@
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 import gendiff from '../src';
 
@@ -6,7 +7,7 @@ import {
   formats, dataTypes, comparisonPath, expectedPath,
 } from './constants';
 
-import getData from '../src/lib/file';
+const getContent = path => readFileSync(path, 'utf8');
 
 describe(`Calculate difference for recursive structures of [${dataTypes}] types of data for different [${formats}] formats `, () => {
   formats.forEach((format) => {
@@ -17,10 +18,10 @@ describe(`Calculate difference for recursive structures of [${dataTypes}] types 
           comparisonPath, `${dataType}/before.${dataType}`);
         const afterPath = resolve(__dirname,
           comparisonPath, `${dataType}/after.${dataType}`);
-        const { lines } = getData(resolve(__dirname,
+        const expectedContent = getContent(resolve(__dirname,
           expectedPath, `${format}.txt`));
         const genDiffResult = gendiff(beforePath, afterPath, format);
-        expect(genDiffResult).toEqual(lines);
+        expect(genDiffResult).toEqual(expectedContent);
       },
     );
   });
