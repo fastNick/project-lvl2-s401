@@ -1,6 +1,6 @@
 {
   "name": "gendiff",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "Learn how to create cli applications, parse and format data in json, yaml, ini. Learn to design an application architecture. And also write unit tests.",
   "main": "dist/index.js",
   "bin": {
@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "commander": "^2.20.0",
-    "gendiff-nick": "*",
     "ini": "^1.3.5",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.14"
