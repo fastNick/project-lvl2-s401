@@ -1,5 +1,10 @@
-import getFormatter from '../formatters';
-import nestedChildrenByFormat from './generic';
+import getFormatter from './formatters';
+
+const nestedChildrenByFormat = {
+  nested: render => render.value,
+  plain: render => render.value.filter(child => child.name !== 'not changed'),
+  json: render => render.value,
+};
 
 function Render(node, format, parent = null) {
   this.value = node.value;

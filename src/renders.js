@@ -8,4 +8,6 @@ const rendersByFormat = {
   json: (ast, format) => ['[', flattenDeep([ast.map(node => new Render(node, format).toString())]), ']'].join(''),
 };
 
-export default rendersByFormat;
+const getRender = (ast, format) => rendersByFormat[format](ast, format);
+
+export default getRender;

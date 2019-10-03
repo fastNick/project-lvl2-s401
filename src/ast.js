@@ -53,4 +53,6 @@ const getSortedAstConfig = (firstConfig = {}, secondConfig = {}) => {
   return sort(ast);
 };
 
-export default getSortedAstConfig;
+const getAst = (firstConfig, secondConfig) => getSortedAstConfig(firstConfig, secondConfig);
+
+export default getAst;

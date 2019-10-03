@@ -11,3 +11,11 @@ export const readFile = (source) => {
 };
 
 export const getExtension = source => extname(source);
+
+
+const getData = source => ({
+  extension: getExtension(source),
+  lines: readFile(source),
+});
+
+export default getData;

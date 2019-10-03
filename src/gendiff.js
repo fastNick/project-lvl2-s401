@@ -1,6 +1,6 @@
-import getData from '../lib/file';
-import convertToObject from '../parsers';
-import getAst from '../AST';
+import getData from './io';
+import convertToObject from './parsers';
+import getAst from './ast';
 
 const getGenDiffAst = (beforePath, afterPath) => {
   const beforeData = getData(beforePath);
@@ -11,4 +11,6 @@ const getGenDiffAst = (beforePath, afterPath) => {
   return getAst(beforeConfig, afterConfig);
 };
 
-export default getGenDiffAst;
+const getGenDiff = (beforePath, afterPath) => getGenDiffAst(beforePath, afterPath);
+
+export default getGenDiff;

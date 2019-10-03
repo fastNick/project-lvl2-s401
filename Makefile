@@ -2,13 +2,13 @@ install:
 	npm install
 
 start: build
-	dist/bin/gendiff.js --format nested __tests__/__fixtures__/comparison/yml/before.yml __tests__/__fixtures__/comparison/yml/after.yml
+	dist/bin/commander-gendiff.js --format nested __tests__/__fixtures__/comparison/yml/before.yml __tests__/__fixtures__/comparison/yml/after.yml
 	
 publish:
 	npm publish
 
 lint:
-	npx eslint --debug --fix .
+	npx eslint --debug .
 
 test:
 	npm test
