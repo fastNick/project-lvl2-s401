@@ -1,16 +1,15 @@
-import getData from './io';
+import { getContent, getExtension } from './io';
 import convertToObject from './parsers';
 import getAst from './ast';
 
 const getGenDiffAst = (beforePath, afterPath) => {
-  const beforeData = getData(beforePath);
-  const beforeConfig = convertToObject(beforeData);
-  const afterData = getData(afterPath);
-  const afterConfig = convertToObject(afterData);
+  const beforeContent = getContent(beforePath);
+  const beforeDataType = getExtension(beforePath);
+  const beforeConfig = convertToObject(beforeDataType, beforeContent);
+  const afterContent = getContent(afterPath);
+  const afterDataType = getExtension(beforePath);
+  const afterConfig = convertToObject(afterDataType, afterContent);
 
   return getAst(beforeConfig, afterConfig);
 };
-
-const getGenDiff = (beforePath, afterPath) => getGenDiffAst(beforePath, afterPath);
-
-export default getGenDiff;
+export default getGenDiffAst;
