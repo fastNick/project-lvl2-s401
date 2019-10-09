@@ -22,9 +22,9 @@ const getObjectProperty = (value, key, keyMargin) => [
   key, afterKeySeparator,
   value[key], newLine];
 
-const getKeyMargin = (render, nodeName = render.nodeName) => {
+const getKeyMargin = (render, nodeName = render.name) => {
   const iter = node => (node === null ? 0
-    : getLeftPadding(node.nodeName).length + iter(node.parent));
+    : getLeftPadding(node.name).length + iter(node.parent));
   return [getPaddingSymbolsLine(iter(render.parent)), getLeftPadding(nodeName)].join('');
 };
 
@@ -40,7 +40,7 @@ const stringifyObject = (value, render) => {
 const stringify = (value, render) => (isPlainObject(value) ? stringifyObject(value,
   render) : value);
 
-const generateBaseString = (value, render, nodeName = render.nodeName) => [
+const generateBaseString = (value, render, nodeName = render.name) => [
   getKeyMargin(render, nodeName),
   render.key,
   afterKeySeparator,
@@ -52,13 +52,13 @@ export const formattersByRender = ({
   deleted: render => generateBaseString(render.value, render),
   inserted: render => generateBaseString(render.value, render),
   nested: render => [
-    getKeyMargin(render, render.nodeName),
+    getKeyMargin(render, render.name),
     render.key,
     afterKeySeparator,
     leftCurl,
     newLine,
-    ...render.children,
-    getKeyMargin(render, render.nodeName),
+    ...render.getChildren(),
+    getKeyMargin(render, render.name),
     rightCurl,
     newLine,
   ],
