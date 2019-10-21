@@ -1,16 +1,16 @@
 import { readFileSync } from 'fs';
 import { extname } from 'path';
-import convertToObject from './parsers';
+import parse from './parsers';
 import getAst from './ast';
-import getRender from './renders';
+import getRender from './formatters';
 
 const renderGenDiff = (beforePath, afterPath, format) => {
   const beforeContent = readFileSync(beforePath, 'utf8');
-  const beforeDataType = extname(beforePath);
-  const beforeConfig = convertToObject(beforeDataType, beforeContent);
+  const beforeDataType = extname(beforePath).slice(1);
+  const beforeConfig = parse(beforeDataType, beforeContent);
   const afterContent = readFileSync(afterPath, 'utf8');
-  const afterDataType = extname(afterPath);
-  const afterConfig = convertToObject(afterDataType, afterContent);
+  const afterDataType = extname(afterPath).slice(1);
+  const afterConfig = parse(afterDataType, afterContent);
   const gendiff = getAst(beforeConfig, afterConfig);
   return getRender(gendiff, format);
 };
