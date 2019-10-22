@@ -1,29 +1,30 @@
 import { flattenDeep } from 'lodash';
 import { pathSeparator, complexValue } from './constantsPlain';
 
-const getPath = render => (render.parent !== null ? [getPath(render.parent), render.key]
-  .join(pathSeparator) : render.key);
+const getPath = nodeFormatter => (nodeFormatter.parent !== null ? [getPath(nodeFormatter.parent),
+  nodeFormatter.key]
+  .join(pathSeparator) : nodeFormatter.key);
 
 const stringifyMapper = {
   object: () => complexValue,
   string: value => `'${value}'`,
 };
 
-const generateBaseString = render => `Property '${getPath(render)}' was `;
+const generateBaseString = nodeFormatter => `Property '${getPath(nodeFormatter)}' was `;
 
 const stringify = value => (stringifyMapper[typeof value] ? stringifyMapper[typeof value](value)
   : value);
 
-const stringifiersByRender = ({
-  changed(render) { return [generateBaseString(render), `was updated. From ${stringify(render.valueOld)} to ${stringify(render.valueNew)}`].join(''); },
-  deleted(render) { return [generateBaseString(render), 'removed'].join(''); },
-  inserted(render) { return [generateBaseString(render), `added with value: ${stringify(render.value)}`].join(''); },
-  nested(render) { return render.getChildren().filter(x => x.type !== 'not changed').map(child => this[child.type](child)); },
+const stringifiersByType = ({
+  changed(nodeFormatter) { return [generateBaseString(nodeFormatter), `was updated. From ${stringify(nodeFormatter.valueOld)} to ${stringify(nodeFormatter.valueNew)}`].join(''); },
+  deleted(nodeFormatter) { return [generateBaseString(nodeFormatter), 'removed'].join(''); },
+  inserted(nodeFormatter) { return [generateBaseString(nodeFormatter), `added with value: ${stringify(nodeFormatter.value)}`].join(''); },
+  nested(nodeFormatter) { return nodeFormatter.getChildren().filter(x => x.type !== 'not changed').map(child => this[child.type](child)); },
 });
 
 const plainFormatter = (stringifiersTree) => {
   const stringifiers = stringifiersTree
-    .map(render => stringifiersByRender[render.type](render));
+    .map(nodeFormatter => stringifiersByType[nodeFormatter.type](nodeFormatter));
   return flattenDeep([stringifiers]).join('\n');
 };
 

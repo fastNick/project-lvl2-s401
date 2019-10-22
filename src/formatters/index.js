@@ -2,20 +2,12 @@ import jsonFormatter from './json';
 import nestedFormatter from './nested';
 import plainFormatter from './plain';
 
-
-const nestedChildrenByFormat = {
-  nested: value => value,
-  plain: value => value.filter(child => child.type !== 'not changed'),
-  json: value => value,
-};
-
-const Render = (node, format, parent = null) => {
+const getNodeFormatter = (node, format, parent = null) => {
   const {
     value, key, type, children, valueOld, valueNew,
   } = node;
   const getChildren = function getChildren() {
-    return type === 'nested' ? nestedChildrenByFormat[format](children)
-      .map(child => Render(child, format, this)) : [];
+    return type === 'nested' ? children.map(child => getNodeFormatter(child, format, this)) : [];
   };
 
   return {
@@ -27,27 +19,26 @@ const Render = (node, format, parent = null) => {
     format,
     parent,
     getChildren,
-    toString,
   };
 };
 
-const getStringifiersTree = (ast, format) => ast.map(node => Render(node, format));
+const getFormattersTree = (ast, format) => ast.map(node => getNodeFormatter(node, format));
 
-const rendersByFormat = {
+const formattersByFormat = {
   nested: (ast, format) => {
-    const stringifiersTree = getStringifiersTree(ast, format);
+    const stringifiersTree = getFormattersTree(ast, format);
     return nestedFormatter(stringifiersTree);
   },
   plain: (ast, format) => {
-    const stringifiersTree = getStringifiersTree(ast, format);
+    const stringifiersTree = getFormattersTree(ast, format);
     return plainFormatter(stringifiersTree);
   },
   json: (ast, format) => {
-    const stringifiersTree = getStringifiersTree(ast, format);
+    const stringifiersTree = getFormattersTree(ast, format);
     return jsonFormatter(stringifiersTree);
   },
 };
 
-const getRender = (ast, format) => rendersByFormat[format](ast, format);
+const getFormatter = (ast, format) => formattersByFormat[format](ast, format);
 
-export default getRender;
+export default getFormatter;

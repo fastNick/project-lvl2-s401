@@ -4,31 +4,32 @@ import {
   leftCurl, rightCurl, complexValue,
 } from './constantsJson';
 
-const getPath = render => (render.parent !== null ? [getPath(render.parent), render.key]
-  .join(pathSeparator) : render.key);
+const getPath = nodeFormatter => (nodeFormatter.parent !== null ? [getPath(nodeFormatter.parent),
+  nodeFormatter.key]
+  .join(pathSeparator) : nodeFormatter.key);
 
-const generateBaseString = render => ([`"name":"${render.key}"`, `"type":"${render.type}"`,
-  `"path":"${getPath(render)}"`]).join(',');
+const generateBaseString = nodeFormatter => ([`"name":"${nodeFormatter.key}"`, `"type":"${nodeFormatter.type}"`,
+  `"path":"${getPath(nodeFormatter)}"`]).join(',');
 
 const stringify = value => (isPlainObject(value) ? complexValue : value);
 
-const stringifiersByRender = {
-  nested(render) {
-    const children = render.getChildren().map(x => this[x.type](x));
-    return [leftCurl, generateBaseString(render), comma, `"children":[${children}]`, rightCurl].join('');
+const stringifiersByNodeType = {
+  nested(nodeFormatter) {
+    const children = nodeFormatter.getChildren().map(x => this[x.type](x));
+    return [leftCurl, generateBaseString(nodeFormatter), comma, `"children":[${children}]`, rightCurl].join('');
   },
-  changed(render) {
-    return [leftCurl, generateBaseString(render), comma,
-      `"valueBefore":"${render.valueOld}"`, comma, `"valueAfter":"${render.valueNew}"`, rightCurl].join('');
+  changed(nodeFormatter) {
+    return [leftCurl, generateBaseString(nodeFormatter), comma,
+      `"valueBefore":"${nodeFormatter.valueOld}"`, comma, `"valueAfter":"${nodeFormatter.valueNew}"`, rightCurl].join('');
   },
-  deleted(render) { return [leftCurl, generateBaseString(render), comma, `"value":"${stringify(render.value)}"`, rightCurl].join(''); },
-  inserted(render) { return [leftCurl, generateBaseString(render), comma, `"value":"${stringify(render.value)}"`, rightCurl].join(''); },
-  'not changed': function notChanged(render) { return [leftCurl, generateBaseString(render), comma, `"value":"${stringify(render.value)}"`, rightCurl].join(''); },
+  deleted(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
+  inserted(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
+  'not changed': function notChanged(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
 };
 
 const jsonFormatter = (stringifiersTree) => {
   const stringifiers = stringifiersTree
-    .map(render => stringifiersByRender[render.type](render));
+    .map(nodeFormatter => stringifiersByNodeType[nodeFormatter.type](nodeFormatter));
   return ['[', flattenDeep([stringifiers]), ']'].join('');
 };
 

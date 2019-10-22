@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { extname } from 'path';
 import parse from './parsers';
 import getAst from './ast';
-import getRender from './formatters';
+import getFormatter from './formatters';
 
 const renderGenDiff = (beforePath, afterPath, format) => {
   const beforeContent = readFileSync(beforePath, 'utf8');
@@ -12,7 +12,7 @@ const renderGenDiff = (beforePath, afterPath, format) => {
   const afterDataType = extname(afterPath).slice(1);
   const afterConfig = parse(afterDataType, afterContent);
   const gendiff = getAst(beforeConfig, afterConfig);
-  return getRender(gendiff, format);
+  return getFormatter(gendiff, format);
 };
 
 export default renderGenDiff;
