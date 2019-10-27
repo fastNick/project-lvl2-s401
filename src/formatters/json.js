@@ -1,36 +1,61 @@
-import { isPlainObject, flattenDeep } from 'lodash';
-import {
-  comma, pathSeparator,
-  leftCurl, rightCurl, complexValue,
-} from './constantsJson';
+import { isPlainObject } from 'lodash';
+
+const pathSeparator = '>>';
+const complexValue = '[complex value]';
+
 
 const getPath = nodeFormatter => (nodeFormatter.parent !== null ? [getPath(nodeFormatter.parent),
   nodeFormatter.key]
   .join(pathSeparator) : nodeFormatter.key);
 
-const generateBaseString = nodeFormatter => ([`"name":"${nodeFormatter.key}"`, `"type":"${nodeFormatter.type}"`,
-  `"path":"${getPath(nodeFormatter)}"`]).join(',');
+const generateBaseString = nodeFormatter => (
+  {
+    name: `${nodeFormatter.key}`,
+    type: `${nodeFormatter.type}`,
+    path: `${getPath(nodeFormatter)}`,
+  });
 
 const stringify = value => (isPlainObject(value) ? complexValue : value);
 
 const stringifiersByNodeType = {
   nested(nodeFormatter) {
     const children = nodeFormatter.getChildren().map(x => this[x.type](x));
-    return [leftCurl, generateBaseString(nodeFormatter), comma, `"children":[${children}]`, rightCurl].join('');
+    return {
+      ...generateBaseString(nodeFormatter),
+      children,
+    };
   },
   changed(nodeFormatter) {
-    return [leftCurl, generateBaseString(nodeFormatter), comma,
-      `"valueBefore":"${nodeFormatter.valueOld}"`, comma, `"valueAfter":"${nodeFormatter.valueNew}"`, rightCurl].join('');
+    return {
+      ...generateBaseString(nodeFormatter),
+      valueBefore: `${nodeFormatter.valueOld}`,
+      valueAfter: `${nodeFormatter.valueNew}`,
+    };
   },
-  deleted(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
-  inserted(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
-  'not changed': function notChanged(nodeFormatter) { return [leftCurl, generateBaseString(nodeFormatter), comma, `"value":"${stringify(nodeFormatter.value)}"`, rightCurl].join(''); },
+  deleted(nodeFormatter) {
+    return {
+      ...generateBaseString(nodeFormatter),
+      value: `${stringify(nodeFormatter.value)}`,
+    };
+  },
+  inserted(nodeFormatter) {
+    return {
+      ...generateBaseString(nodeFormatter),
+      value: `${stringify(nodeFormatter.value)}`,
+    };
+  },
+  'not changed': function notChanged(nodeFormatter) {
+    return {
+      ...generateBaseString(nodeFormatter),
+      value: `${stringify(nodeFormatter.value)}`,
+    };
+  },
 };
 
 const jsonFormatter = (stringifiersTree) => {
-  const stringifiers = stringifiersTree
+  const objects = stringifiersTree
     .map(nodeFormatter => stringifiersByNodeType[nodeFormatter.type](nodeFormatter));
-  return ['[', flattenDeep([stringifiers]), ']'].join('');
+  return JSON.stringify(objects);
 };
 
 export default jsonFormatter;
