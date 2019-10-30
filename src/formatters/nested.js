@@ -1,79 +1,63 @@
 import { flattenDeep, isPlainObject } from 'lodash';
-import {
-  paddingFromKey, paddingFromSign, paddingSymbol,
-  afterKeySeparator, nonUpdatedSign, leftCurl, rightCurl,
-  newLine, signsByASTNode,
-} from './constantsNested';
 
+const paddingSymbol = ' ';
+const paddingBeforeSign = 2;
 
-const getSign = nodeName => signsByASTNode[nodeName];
+const signsByNode = {
+  deleted: '-',
+  inserted: '+',
+  'not changed': paddingSymbol,
+  nested: paddingSymbol,
+};
+const beforeKeyString = nodeType => `${paddingSymbol.repeat(paddingBeforeSign)}${signsByNode[nodeType]}${paddingSymbol}`;
 
-const getPaddingSymbolsLine = length => paddingSymbol.repeat(length);
+const getObjectProperty = (value, key, parentPadding) => [
+  paddingSymbol.repeat(parentPadding + paddingBeforeSign),
+  `${paddingSymbol} ${key}: ${value[key]}\n`];
 
-const getLeftPadding = nodeName => ([getPaddingSymbolsLine(paddingFromSign),
-  getSign(nodeName),
-  getPaddingSymbolsLine(paddingFromKey)].join(''));
-
-const getObjectProperty = (value, key, keyMargin) => [
-  getPaddingSymbolsLine(keyMargin),
-  getPaddingSymbolsLine(paddingFromSign),
-  nonUpdatedSign,
-  getPaddingSymbolsLine(paddingFromKey),
-  key, afterKeySeparator,
-  value[key], newLine];
-
-const getKeyMargin = (nodeFormatter) => {
+const getLeftParentPadding = (renderNode) => {
   const iter = node => (node === null ? 0
-    : getLeftPadding(nodeFormatter.type).length + iter(node.parent));
-  return [getPaddingSymbolsLine(iter(nodeFormatter.parent)), getLeftPadding(nodeFormatter.type)].join('');
+    : beforeKeyString(renderNode.type).length + iter(node.parent));
+  const parentPaddingLength = iter(renderNode.parent);
+  return [paddingSymbol.repeat(parentPaddingLength), beforeKeyString(renderNode.type)].join('');
 };
 
-const stringifyObject = (nodeFormatter) => {
-  const keyMargin = getKeyMargin(nodeFormatter).length;
-  return [leftCurl,
-    newLine,
-    ...Object.keys(nodeFormatter.value).map(key => getObjectProperty(nodeFormatter.value,
-      key, keyMargin)),
-    getPaddingSymbolsLine(keyMargin),
-    rightCurl];
+const stringifyObject = (renderNode) => {
+  const parentPadding = getLeftParentPadding(renderNode).length;
+  const properties = Object.keys(renderNode.value)
+    .map(key => getObjectProperty(renderNode.value, key, parentPadding));
+  const flattenProperties = flattenDeep(properties).join('');
+  return `{\n${flattenProperties}${paddingSymbol.repeat(parentPadding)}}`;
 };
 
-const stringify = nodeFormatter => (isPlainObject(nodeFormatter.value)
-  ? stringifyObject(nodeFormatter) : nodeFormatter.value);
+const stringify = renderNode => (isPlainObject(renderNode.value)
+  ? stringifyObject(renderNode) : renderNode.value);
 
-const generateBaseString = nodeFormatter => [
-  getKeyMargin(nodeFormatter),
-  nodeFormatter.key,
-  afterKeySeparator,
-  stringify(nodeFormatter), newLine];
+const generateBaseString = renderNode => `${getLeftParentPadding(renderNode)}${renderNode.key}: ${stringify(renderNode)}\n`;
 
-export const stringifiersByType = ({
-  changed(nodeFormatter) {
-    return [generateBaseString({ ...nodeFormatter, value: nodeFormatter.valueOld, type: 'deleted' }),
-      generateBaseString({ ...nodeFormatter, value: nodeFormatter.valueNew, type: 'inserted' })];
+const stringifiersByType = ({
+  changed(renderNode) {
+    return [generateBaseString({ ...renderNode, value: renderNode.valueOld, type: 'deleted' }),
+      generateBaseString({ ...renderNode, value: renderNode.valueNew, type: 'inserted' })];
   },
-  deleted(nodeFormatter) { return generateBaseString(nodeFormatter); },
-  inserted(nodeFormatter) { return generateBaseString(nodeFormatter); },
-  nested(nodeFormatter) {
+  deleted(renderNode) { return generateBaseString(renderNode); },
+  inserted(renderNode) { return generateBaseString(renderNode); },
+  nested(renderNode) {
+    const children = renderNode.getChildren().map(child => this[child.type](child));
     return [
-      getKeyMargin(nodeFormatter),
-      nodeFormatter.key,
-      afterKeySeparator,
-      leftCurl,
-      newLine,
-      ...nodeFormatter.getChildren().map(child => this[child.type](child)),
-      getKeyMargin(nodeFormatter),
-      rightCurl,
-      newLine,
+      getLeftParentPadding(renderNode),
+      renderNode.key,
+      ': {\n',
+      ...children,
+      getLeftParentPadding(renderNode),
+      '}\n',
     ];
   },
-  'not changed': function notChanged(nodeFormatter) { return generateBaseString(nodeFormatter); },
+  'not changed': function notChanged(renderNode) { return generateBaseString(renderNode); },
 });
 
-const nestedFormatter = (stringifiersTree) => {
-  const stringifiers = stringifiersTree.map(nodeFormatter => stringifiersByType[nodeFormatter
-    .type](nodeFormatter));
+export default (rendersTree) => {
+  const stringifiers = rendersTree.map(renderNode => stringifiersByType[renderNode
+    .type](renderNode));
   return flattenDeep(['{\n', stringifiers, '}']).join('');
 };
-
-export default nestedFormatter;
