@@ -34,18 +34,16 @@ const keyTypes = [
 const getKeyByType = (first, second, key) => keyTypes
   .find(({ check }) => check(first, second, key));
 
+const getAstConfig = (firstConfig = {}, secondConfig = {}) => {
+  const unionedKeys = _.union(Object.keys(firstConfig),
+    Object.keys(secondConfig)).sort();
 
-const sortedUnionedKeys = (firstConfig, secondConfig) => _.union(Object.keys(firstConfig),
-  Object.keys(secondConfig))
-  .sort();
-
-const getAstConfig = (firstConfig = {}, secondConfig = {}) => sortedUnionedKeys(firstConfig,
-  secondConfig)
-  .map((key) => {
+  return unionedKeys.map((key) => {
     const { type, process } = getKeyByType(firstConfig, secondConfig, key);
     return {
       type, key, ...process(firstConfig[key], secondConfig[key], getAstConfig),
     };
   });
+};
 
 export default getAstConfig;

@@ -1,59 +1,53 @@
 import { isPlainObject } from 'lodash';
 
-const pathSeparator = '>>';
 const complexValue = '[complex value]';
 
 
-const getPath = renderNode => (renderNode.parent !== null ? [getPath(renderNode.parent),
-  renderNode.key]
-  .join(pathSeparator) : renderNode.key);
+const getPath = (renderNode, initialPath) => (initialPath ? initialPath.concat(`>>${renderNode.key}`) : renderNode.key);
 
-const generateBaseString = renderNode => (
-  {
-    name: `${renderNode.key}`,
-    type: `${renderNode.type}`,
-    path: `${getPath(renderNode)}`,
-  });
 
 const stringify = value => (isPlainObject(value) ? complexValue : value);
 
 const stringifiersByNodeType = {
-  nested(renderNode) {
-    const children = renderNode.getChildren().map(x => this[x.type](x));
+  nested: (renderNode, initialPath) => {
+    const path = `${getPath(renderNode, initialPath)}`;
+    const children = renderNode.children.map(x => stringifiersByNodeType[x.type](x, path));
     return {
-      ...generateBaseString(renderNode),
+      name: `${renderNode.key}`,
+      type: `${renderNode.type}`,
+      path,
       children,
     };
   },
-  changed(renderNode) {
-    return {
-      ...generateBaseString(renderNode),
-      valueBefore: `${renderNode.valueOld}`,
-      valueAfter: `${renderNode.valueNew}`,
-    };
-  },
-  deleted(renderNode) {
-    return {
-      ...generateBaseString(renderNode),
-      value: `${stringify(renderNode.value)}`,
-    };
-  },
-  inserted(renderNode) {
-    return {
-      ...generateBaseString(renderNode),
-      value: `${stringify(renderNode.value)}`,
-    };
-  },
-  'not changed': function notChanged(renderNode) {
-    return {
-      ...generateBaseString(renderNode),
-      value: `${stringify(renderNode.value)}`,
-    };
-  },
+  changed: (renderNode, initialPath) => ({
+    name: `${renderNode.key}`,
+    type: `${renderNode.type}`,
+    path: `${getPath(renderNode, initialPath)}`,
+    valueBefore: `${renderNode.valueOld}`,
+    valueAfter: `${renderNode.valueNew}`,
+  }),
+  deleted: (renderNode, initialPath) => ({
+    name: `${renderNode.key}`,
+    type: `${renderNode.type}`,
+    path: `${getPath(renderNode, initialPath)}`,
+    value: `${stringify(renderNode.value)}`,
+  }),
+  inserted: (renderNode, initialPath) => ({
+    name: `${renderNode.key}`,
+    type: `${renderNode.type}`,
+    path: `${getPath(renderNode, initialPath)}`,
+    value: `${stringify(renderNode.value)}`,
+  }),
+  'not changed': (renderNode, initialPath) => ({
+    name: `${renderNode.key}`,
+    type: `${renderNode.type}`,
+    path: `${getPath(renderNode, initialPath)}`,
+    value: `${stringify(renderNode.value)}`,
+  }),
 };
 
-export default (rendersTree) => {
-  const objects = rendersTree
+export default (ast) => {
+  const stringifiers = ast
     .map(renderNode => stringifiersByNodeType[renderNode.type](renderNode));
-  return JSON.stringify(objects);
+  return JSON.stringify(stringifiers);
 };
