@@ -1,56 +1,61 @@
 import { flattenDeep, isPlainObject } from 'lodash';
 
 const initialPaddingLength = 0;
-const paddingSymbol = ' ';
 const paddingBeforeSign = 2;
 
 const signsByNode = {
   deleted: '-',
   inserted: '+',
-  'not changed': paddingSymbol,
-  nested: paddingSymbol,
+  'not changed': ' ',
+  nested: ' ',
 };
-const getBeforeKeyString = nodeType => `${paddingSymbol.repeat(paddingBeforeSign)}${signsByNode[nodeType]}${paddingSymbol}`;
+const getBeforeKeyString = nodeType => `${' '.repeat(paddingBeforeSign)}${signsByNode[nodeType]} `;
 
-const getObjectProperty = (value, key, parentPadding) => `${paddingSymbol
+const getObjectProperty = (value, key, parentPadding) => `${' '
   .repeat(parentPadding)}${getBeforeKeyString('not changed')}${key}: ${value[key]}\n`;
 
-const stringifyObject = (renderNode, parentPadding) => {
-  const properties = Object.keys(renderNode.value)
-    .map(key => getObjectProperty(renderNode.value, key, parentPadding));
+const stringifyObject = (nodeValue, parentPadding) => {
+  const properties = Object.keys(nodeValue)
+    .map(key => getObjectProperty(nodeValue, key, parentPadding));
   const flattenProperties = properties.join('');
-  return `{\n${flattenProperties}${paddingSymbol.repeat(parentPadding)}}`;
+  return `{\n${flattenProperties}${' '.repeat(parentPadding)}}`;
 };
 
-const generateBaseString = (renderNode, initialPadding) => {
-  const totalKeyPadding = getBeforeKeyString(renderNode.type).length + initialPadding;
-  const value = isPlainObject(renderNode.value) ? stringifyObject(renderNode, totalKeyPadding)
-    : renderNode.value;
-  const beforeKey = paddingSymbol.repeat(initialPadding) + getBeforeKeyString(renderNode.type);
-  return `${beforeKey}${renderNode.key}: ${value}\n`;
+const generateBaseString = (key, initialPadding, type, nodeValue) => {
+  const totalKeyPadding = getBeforeKeyString(type).length + initialPadding;
+  const value = isPlainObject(nodeValue) ? stringifyObject(nodeValue, totalKeyPadding)
+    : nodeValue;
+  const beforeKey = ' '.repeat(initialPadding) + getBeforeKeyString(type);
+  return `${beforeKey}${key}: ${value}\n`;
 };
+
+const rec = ([head, ...rest], initialPadding) => (head
+  ? [stringifiersByType[head.type](head, initialPadding), ...rec(rest, initialPadding)] : []);
 
 const stringifiersByType = ({
-  changed: (renderNode, initialPadding) => [generateBaseString({ ...renderNode, value: renderNode.valueOld, type: 'deleted' }, initialPadding),
-    generateBaseString({ ...renderNode, value: renderNode.valueNew, type: 'inserted' }, initialPadding)],
-  deleted: (renderNode, initialPadding) => generateBaseString(renderNode, initialPadding),
-  inserted: (renderNode, initialPadding) => generateBaseString(renderNode, initialPadding),
+  deleted: (renderNode, initialPadding,
+    value = renderNode.value) => generateBaseString(renderNode.key,
+    initialPadding, renderNode.type, value),
+  inserted: (renderNode, initialPadding,
+    value = renderNode.value) => generateBaseString(renderNode.key,
+    initialPadding, renderNode.type, value),
+  changed: (renderNode, initialPadding) => [generateBaseString(renderNode.key, initialPadding, 'deleted', renderNode.valueOld),
+    generateBaseString(renderNode.key, initialPadding, 'inserted', renderNode.valueNew)],
   nested: (renderNode, initialPadding) => {
     const totalPadding = getBeforeKeyString(renderNode.type).length + initialPadding;
-    const children = renderNode
-      .children.map(child => stringifiersByType[child.type](child, totalPadding));
+    const children = rec(renderNode.children, totalPadding);
     return [
-      paddingSymbol.repeat(initialPadding),
+      ' '.repeat(initialPadding),
       getBeforeKeyString(renderNode.type),
       renderNode.key,
       ': {\n',
       ...children,
-      paddingSymbol.repeat(initialPadding),
+      ' '.repeat(initialPadding),
       getBeforeKeyString(renderNode.type),
       '}\n',
     ];
   },
-  'not changed': (renderNode, initialPadding) => generateBaseString(renderNode, initialPadding),
+  'not changed': (renderNode, initialPadding) => generateBaseString(renderNode.key, initialPadding, renderNode.type, renderNode.value),
 });
 
 export default (ast) => {
