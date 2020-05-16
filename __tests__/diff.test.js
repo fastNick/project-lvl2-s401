@@ -3,13 +3,13 @@ import { readFileSync } from 'fs';
 
 import gendiff from '../src';
 
-import {
-  formats, dataTypes, fixturesPath,
-} from './constants';
 
-const getContent = path => readFileSync(path, 'utf8');
+const getContent = (path) => readFileSync(path, 'utf8');
+export const fixturesPath = './__fixtures__/';
+export const formats = ['nested', 'plain', 'json'];
+export const dataTypes = [['json'], ['ini'], ['yml']];
 
-const getPath = file => resolve(__dirname, fixturesPath, `${file}`);
+const getPath = (file) => resolve(__dirname, fixturesPath, `${file}`);
 
 describe(`Calculate difference for recursive structures of [${dataTypes}] types of data for different [${formats}] formats `, () => {
   formats.forEach((format) => {
