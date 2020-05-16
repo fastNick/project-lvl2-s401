@@ -11,7 +11,7 @@ const keyTypes = [
     type: 'not changed',
     check: (first, second, key) => (_.has(first, key) && _.has(second, key)
       && (first[key] === second[key])),
-    process: first => ({ value: first }),
+    process: (first) => ({ value: first }),
   },
   {
     type: 'changed',
@@ -22,7 +22,7 @@ const keyTypes = [
   {
     type: 'deleted',
     check: (first, second, key) => (_.has(first, key) && !_.has(second, key)),
-    process: first => ({ value: first }),
+    process: (first) => ({ value: first }),
   },
   {
     type: 'inserted',
