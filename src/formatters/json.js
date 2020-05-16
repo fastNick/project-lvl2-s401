@@ -5,13 +5,16 @@ const complexValue = '[complex value]';
 
 const getPath = (renderNode, initialPath) => (initialPath ? initialPath.concat(`>>${renderNode.key}`) : renderNode.key);
 
+const stringify = (value) => (isPlainObject(value) ? complexValue : value);
 
-const stringify = value => (isPlainObject(value) ? complexValue : value);
+const rec = ([head, ...rest], stringifiersByTypeObject, path) => (head
+  ? [stringifiersByTypeObject[head.type](head, path),
+    ...rec(rest, stringifiersByTypeObject, path)] : []);
 
 const stringifiersByNodeType = {
   nested: (renderNode, initialPath) => {
     const path = `${getPath(renderNode, initialPath)}`;
-    const children = renderNode.children.map(x => stringifiersByNodeType[x.type](x, path));
+    const children = rec(renderNode.children, stringifiersByNodeType, path);
     return {
       name: `${renderNode.key}`,
       type: `${renderNode.type}`,
@@ -47,7 +50,6 @@ const stringifiersByNodeType = {
 };
 
 export default (ast) => {
-  const stringifiers = ast
-    .map(renderNode => stringifiersByNodeType[renderNode.type](renderNode));
+  const stringifiers = rec(ast, stringifiersByNodeType);
   return JSON.stringify(stringifiers);
 };
