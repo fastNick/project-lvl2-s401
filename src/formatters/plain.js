@@ -6,9 +6,9 @@ const getPath = (renderNode, initialPath) => (initialPath ? initialPath.concat(`
 
 const stringifyMapper = {
   object: () => complexValue,
-  string: value => `'${value}'`,
+  string: (value) => `'${value}'`,
 };
-const stringify = value => (stringifyMapper[typeof value] ? stringifyMapper[typeof value](value)
+const stringify = (value) => (stringifyMapper[typeof value] ? stringifyMapper[typeof value](value)
   : value);
 
 const stringifiersByNodeType = ({
@@ -29,14 +29,14 @@ const stringifiersByNodeType = ({
   },
   nested: (renderNode, initialPath) => {
     const path = `${getPath(renderNode, initialPath)}`;
-    return renderNode.children.filter(x => x.type !== 'not changed')
-      .map(child => stringifiersByNodeType[child.type](child, path));
+    return renderNode.children.filter((x) => x.type !== 'not changed')
+      .map((child) => stringifiersByNodeType[child.type](child, path));
   },
 });
 
 
 export default (ast) => {
   const stringifiers = ast
-    .map(renderNode => stringifiersByNodeType[renderNode.type](renderNode));
+    .map((renderNode) => stringifiersByNodeType[renderNode.type](renderNode));
   return flattenDeep(stringifiers).join('\n');
 };
